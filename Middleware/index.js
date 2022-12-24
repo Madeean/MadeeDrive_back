@@ -7,6 +7,7 @@ module.exports = {
       let token = req.headers.authorization
         ? req.headers.authorization.replace("Bearer ", "")
         : null;
+      // res.json({ data: token });
       if (!token) {
         return res.json({ data: "token tidak ada login dahulu" });
       }
@@ -14,6 +15,10 @@ module.exports = {
       let user = await Db("user").where({ id: decode.id }).first();
       if (!user) {
         return res.json({ data: "pakai akun yang sudah login" });
+      }
+      let user_with_token = await Db("user").where("id", user.id).first();
+      if (user_with_token.token != token) {
+        return res.json({ data: "token tidak valid" });
       }
       req.user = user;
       next();

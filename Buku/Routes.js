@@ -5,6 +5,7 @@ const {
   getBukuById,
   editBuku,
   deleteBuku,
+  getAllBukuSendiri,
 } = require("./Controller.js");
 const os = require("os");
 const multer = require("multer");
@@ -15,6 +16,7 @@ const { cekLogin } = require("../Middleware");
 
 router.use(cekLogin);
 router.get("/", getAllBuku);
+router.get("/sendiri", getAllBukuSendiri);
 router.post("/", multer({ dest: os.tmpdir() }).single("foto_buku"), tambahBuku);
 router.get("/:id", getBukuById);
 router.put("/:id", multer({ dest: os.tmpdir() }).single("foto_buku"), editBuku);

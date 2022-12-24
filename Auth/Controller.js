@@ -46,16 +46,28 @@ module.exports = {
       if (!checkPassword) {
         return res.json({ data: "password salah" });
       }
-      let token = jwt.sign({ id: user.id }, config.jwtkey);
-      return res.json({
-        id: user.id,
-        name: user.name,
-        email: user.email,
+      let token = jwt.sign({ id: user.id }, config.jwtkey, { expiresIn: "1d" });
+
+      let update_token = await Db("user").where("id", user.id).update({
         token: token,
       });
+
+      let data = await Db("user").where("id", user.id).first();
+      res.json({ data: data });
     } catch (e) {
       console.log(e);
       res.json({ data: "gagal login" });
+    }
+  },
+  logout: async (req, res) => {
+    try {
+      let hapus_token = await Db("user").where("id", req.user.id).update({
+        token: null,
+      });
+      res.json({ data: "berhasil logout" });
+    } catch (e) {
+      console.log(e);
+      res.json({ data: "gagal logout" });
     }
   },
 };

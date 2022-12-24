@@ -9,6 +9,8 @@ const Db = require("./Database/Database");
 
 var BukuRoutes = require("./Buku/Routes");
 var AuthRoutes = require("./Auth/Routes");
+var HalamanDepan = require("./Halaman Depan/Routes");
+var UserRoutes = require("./User/Routes");
 
 const app = express();
 app.use(cors());
@@ -33,7 +35,9 @@ app.get("/", (req, res) => res.send("Hello World!"));
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
+app.use("/", HalamanDepan);
 app.use("/buku", BukuRoutes);
 app.use("/", AuthRoutes);
+app.use("/user", UserRoutes);
 
 module.exports = app;
