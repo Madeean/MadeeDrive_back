@@ -2,6 +2,7 @@ const Db = require("../Database/Database");
 const fs = require("fs");
 var path = require("path");
 const config = require("../config");
+const shortid = require("shortid");
 module.exports = {
   getAllBuku: async (req, res) => {
     try {
@@ -39,6 +40,8 @@ module.exports = {
         src.pipe(dest);
         const url =
           req.protocol + "://" + req.get("host") + "/uploads/" + filename;
+        const sort = shortid.generate(url);
+        const shorturl = "http://localhost:3000/" + sort;
         src.on("end", async () => {
           let id = await Db("buku").insert({
             user_id: user_id,
@@ -46,6 +49,7 @@ module.exports = {
             sinopsis: sinopsis,
             foto_buku: url,
             public: public,
+            shorturl: shorturl,
           });
           res.json({
             id: id[0],
@@ -54,6 +58,7 @@ module.exports = {
             sinopsis,
             foto_buku: url,
             public,
+            shorturl,
           });
         });
         src.on("error", async () => {
